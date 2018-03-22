@@ -1,13 +1,8 @@
-Uzupełnij poniższy dokument zastępując tekst "[wpisz nazwę]" nazwą
-twojego (waszego) projektu JavaScript.
- 
-Przeczytaj [instrukcję realizacji zadania](doc/zadanie.md).
-
-Po uzupełnieniu dokumentu usuń powyższe oraz niniejszy akapit
-i zatwierdź zmiany używając komentarza "Aktualizacja README.md".
-
-# [Wpisz nazwę projektu]
+# [Pong]
 Implementacja gry [wpisz nazwę] w JavaScript
 
 ## Uruchomienie
-[Tu umieść opis kroków pozwalających na uruchomienie projektu]
+Aby uruchomić grę należy:
+1. Pobrać folder z repozytorium o nazwie "Pong"
+2. Rozpakować folder z grą
+3. Uruchomić poprzez otwarcie pliku o nazwie index.html
