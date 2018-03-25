@@ -1,48 +1,371 @@
-<!doctype html>
-<html class="no-js" lang="pl">
+
+<html lang="pl">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Projekt [wpisz nazwę]</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Umieść favicon.ico w głównym katalogu -->
-
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
+    <title>Pong Game</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   </head>
   <body>
-    <!--[if lte IE 9]>
-    <p class="browserupgrade">
-        Używasz <strong>przestarzałej</strong> przeglądarki.
-        Zalecamy <a href="https://browsehappy.com/">aktualizację przeglądarki</a>
-        w celu polepszenia obsługi najnowszych standardów i podniesienia poziomu bezpieczeństwa.</p>
-    <![endif]-->
+    <div id="container">
+    <audio src="music/beep.mp3" controls id="sound"></audio>
+    <div class="flex-center">
+      <div class="logo">
+        <h1 id="btn1">Pong Game</h1>
+        <h2 id="btn2">Settings</h2>
+        <h2 id="btn3">Music</h2>
+        <audio src="music/sandstorm.mp3" controls autoplay id="sound2"></audio>
+        <div id="settings">
+          <a>Game Difficulties:</a>
+            <a id="a1" href="">Easy</a>
+            <a id="a2" href="">Normal</a>
+            <a id="a3" href="">Hard</a>
+            <a id="a4" href="">Player vs Ai</a>
+            <br>
+          <a id="" id="bcolor">Ball size</a>
+          <button id="btnsize1">+</button>
+          <button id="btnsize2">-</button><br>
+          <a>Paddles Speed</a>
+          <button id="btnspeed1">+</button>
+          <button id="btnspeed2">-</button><br>
+          <a>Paddles Height</a>
+          <button id="btnheight1">+</button>
+          <button id="btnheight2">-</button><br>
+          <a>Paddles Width</a>
+          <button id="btnwidth1">+</button>
+          <button id="btnwidth2">-</button><br>
 
-    <!-- Tutaj dodajesz swój kod -->
-    <h1>Projekt [wpisz nazwę]</h1>
-    <div>
-      <ul class="menu">
-        <li><a href="index.html">Strona główna</a></li>
-        <li><a href="app_jq.html">Wersja jQuery</a></li>
-        <li><a href="app_p5.html">Wersja p5js</a></li>
-      </ul>
+          <a>Ball Color</a>
+          <button id="bcolor1"><</button>
+          <button id="bcolor2">></button>
+        </div>
+      </div>
+    <canvas id="canvas" width="600" height="300"></canvas>
     </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d"); //wywołanie metody
+
+canvas.width = 1000;
+canvas.height = 500;
+
+//wielkośc canvas
+const cw = canvas.width; //utworzenie zmiennej canvas width
+const ch = canvas.height; //utworzenie zmiennej canvas height
+
+//wielkość piłki
+let ballR = 15;
+//kolor piłki
+let c = "white";
+
+//pozycja piłki
+let ballX = cw / 2 - ballR / 2;
+let ballY = ch / 2 - ballR / 2;
+
+//wielkość paletek
+let paddleWidth = 20;
+let paddleHeight = 100;
+
+//pozycja paletek
+//gracz
+const playerX = 70;
+let playerY = 200;
+//AI
+const aiX = 910;
+let aiY = 200;
+
+//wielkość linii środkowych
+const lineWidth = 6;
+const lineHeight = 20;
+
+//prędkośc piłki
+let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+let ballSpeedX = plusOrMinus * 4;
+plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+let ballSpeedY = plusOrMinus * Math.round(Math.random() * 3 + 1);
+
+let speed = 50;
+
+var snd = document.getElementById("sound");
+
+var snd2 = document.getElementById("sound2");
+snd2.volume = 0.2;
+
+function player() {
+  //gracz
+  ctx.fillStyle = "orange";
+  ctx.fillRect(playerX, playerY, paddleWidth, paddleHeight);
+}
+
+function ai() {
+  //ai
+  ctx.fillStyle = "red";
+  ctx.fillRect(aiX, aiY, paddleWidth, paddleHeight);
+}
+
+function ball() {
+  const middleBall = ballY + ballR;
+  const middlePaddleP = playerY + paddleHeight / 2;
+  const middlePaddleAI = aiY + paddleHeight / 2;
+  //piłka
+  ctx.beginPath();
+  ctx.arc(ballX,ballY,ballR,0*Math.PI,2*Math.PI);
+  ctx.fillStyle = c;
+  ctx.fill();
+  ballX += ballSpeedX;
+  ballY += ballSpeedY;
+  //rozpoznawanie krawędzi
+  if (ballY - ballR <= 0 || ballY + ballR >= ch) {
+    ballSpeedY = -ballSpeedY;
+    speedUp();
+    playAudio();
+  }
+  /*if(ballX<=0 || (ballX+ballR)>=cw){
+        ballSpeedX=-ballSpeedX;
+        speedUp();
+    }*/
+  if (ballX - ballR <= 0 || ballX + ballR >= cw) {
+    ballX = cw / 2 - ballR /2;
+    ballY = ch / 2 - ballR /2;
+
+    plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+    ballSpeedX = plusOrMinus * 4;
+    plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+    ballSpeedY = plusOrMinus * Math.round(Math.random() * 3 + 1);}
 
 
+      /*if(middleBall>=middlePaddleP){
+                console.log("dol");
+            }
+            if(middleBall<=middlePaddleP){
+                console.log("gora")
+            }*/
 
-    <!-- skrypt umożliwiający sprawdzanie możliwośći przeglądarki -->
-    <script src="js/vendor/modernizr-3.5.0.min.js"></script>
-    <!--biblioteka jQuery-->
-    <!--<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>-->
-    <!--jeżeli nie pobrano jQuery z sieci, spróbuj załadować ją z podfolderu js -->
-    <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
-    <script src="js/plugins.js"></script>
-    <!-- ewentualny kod JS ogólny -->
-    <script src="js/main.js"></script>
-    <!--kod aplikacji w jQuery-->
-    <script src="js/app_jq.js"></script>
+            if (ballX > 50 && ballX - ballR < 90) {
+              if (middleBall >= middlePaddleP - 50 - ballR / 2 &&
+                  middleBall <= middlePaddleP + 50 - ballR / 2){
+                    ballSpeedX = -ballSpeedX;
+                    speedUp();
+                    playAudio();
+                    changeColor();
+              }
+            }
+            if (ballX > 890 && ballX < 930) {
+              if (middleBall >= middlePaddleAI - 50 - ballR / 2 &&
+                middleBall <= middlePaddleAI + 50 + ballR / 2){
+                ballSpeedX = -ballSpeedX;
+                speedUp();
+                playAudio();
+                changeColor();
+              }
+            }
+}
+//zmiana koloru podczas odbicia piłki
+function changeColor(){
+  const red = Math.floor(Math.random() * 256) // 0-255
+  const green = Math.floor(Math.random() * 256) // 0-255
+  const blue = Math.floor(Math.random() * 256) // 0-255
+    container.style.backgroundColor = "rgb(" + red + "," + green + "," + blue +")";
+}
 
+function table() {
+  //stół
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, cw, ch); //wartośc początkowa na osi x, wartośc początkowa na osi y, długośc(ile pikseli na osi x), szerokośc(ile pikseli na osi y)
+  //linie na środku
+  ctx.fillStyle = "gray";
+  for (
+    let linePosition = 20;
+    linePosition < ch;
+    linePosition += 2 * lineHeight
+  ) {
+    ctx.fillRect(cw / 2 - lineWidth / 2, linePosition, lineWidth, lineHeight);
+  }
+}
+
+function game() {
+  table();
+  ball();
+  player();
+  ai();
+}
+
+setInterval(game, 1000 / 60);
+
+topCanvas = canvas.offsetTop;
+console.log("topCanvas")
+
+//pozycja kursora
+//e - informacje o położeniu myszy
+function playerPosition(e) {
+	//console.log("pozycja myszy to" + (e.clientY - topCanvas))
+  aiY = e.clientY - topCanvas - paddleHeight / 2;
+
+  //zabezpieczenie przed wyjechaniem paletki poza canvas
+  if (aiY >= ch - paddleHeight) {
+    aiY = ch - paddleHeight;
+  }
+  if (aiY <= 0) {
+    aiY = 0;
+  }
+}
+
+//przyspieszenie
+function speedUp() {
+  //prędkość X
+  if (ballSpeedX > 0 && ballSpeedX < 16) {
+    ballSpeedX += .4;
+  } else if (ballSpeedX < 0 && ballSpeedX > -16) {
+    ballSpeedX -= .4;
+  }
+  //prędkośc Y
+  if (ballSpeedY > 0 && ballSpeedY < 16) {
+    ballSpeedY += .4;
+  } else if (ballSpeedY < 0 && ballSpeedY > -16) {
+    ballSpeedY -= .4;
+  }
+}
+
+const move = (e) => {
+  //console.log(e.keyCode)
+  //góra: 38, dół: 40,
+  switch(e.keyCode){
+  //strzałka w górę
+    case 38:
+      aiY = aiY - speed;
+      if(aiY < 0){
+        aiY = 0
+      }
+      break;
+  }
+  //strzałka w dół
+  switch(e.keyCode){
+    case 40:
+      aiY = aiY + speed;
+      if(aiY > ch - paddleHeight){
+        aiY = ch - paddleHeight;
+      }
+      break;
+  }
+  //ruch w górę (W)
+  switch(e.keyCode){
+    case 87:
+    playerY = playerY - speed;
+    if(playerY < 0){
+      playerY = 0;
+    }
+    break;
+  }
+  //ruch w dół (S)
+  switch(e.keyCode){
+    case 83:
+    playerY = playerY + speed;
+    if(playerY > ch - paddleHeight){
+      playerY = ch - paddleHeight;
+    }
+    break;
+  }
+}
+
+function playAudio(){
+}
+
+$('#btn1').click(function(){
+  $('#btn1').hide(function(){
+    $('#btn2').show("slow");
+    $('#btn3').show("slow");
+  });
+});
+
+$('#btn2').click(function(){
+  $('#btn2').hide();
+  $('#btn3').hide();
+  $('#settings').show("slow");
+});
+//dźwięk po najechaniu myszką
+var click = document.getElementById("sound");
+
+var links = document.getElementsByTagName("a");
+var linksArray = Array.prototype.slice.call(links);
+
+linksArray.forEach(function(link) {
+    link.onmouseover = function() {
+        click.play();
+    }
+});
+
+var links = document.getElementsByTagName("h1");
+var linksArray = Array.prototype.slice.call(links);
+
+linksArray.forEach(function(link) {
+    link.onmouseover = function() {
+        click.play();
+    }
+});
+
+var links = document.getElementsByTagName("h2");
+var linksArray = Array.prototype.slice.call(links);
+
+linksArray.forEach(function(link) {
+    link.onmouseover = function() {
+        click.play();
+    }
+});
+
+$('#btnsize1').click(function(){
+  ballR = ballR + 2;
+});
+$('#btnsize2').click(function(){
+  ballR = ballR - 2;
+});
+
+$('#btnspeed1').click(function(){
+  speed = speed + 10;
+});
+$('#btnspeed2').click(function(){
+  speed = speed - 10;
+});
+$('#colors').click(function(){
+  ctx.fillStyle = 'red';
+});
+
+$('#btn3').click(function(){
+  $('#btn3').hide();
+  $('#btn2').hide();
+  $('#sound2').show("slow");
+});
+$('#btnheight1').click(function(){
+   paddleHeight = paddleHeight + 5
+});
+$('#btnheight2').click(function(){
+   paddleHeight = paddleHeight - 5
+});$('#btnwidth1').click(function(){
+   paddleWidth = paddleWidth + 5
+});
+$('#btnwidth2').click(function(){
+   paddleWidth = paddleWidth - 5
+});
+$('#bcolor1').click(function(){
+  const red = Math.floor(Math.random() * 256) // 0-255
+  const green = Math.floor(Math.random() * 256) // 0-255
+  const blue = Math.floor(Math.random() * 256) // 0-255
+
+   c = "rgb(" + red + "," + green + "," + blue +")";
+});
+$('#bcolor2').click(function(){
+  const red = Math.floor(Math.random() * 256) // 0-255
+  const green = Math.floor(Math.random() * 256) // 0-255
+  const blue = Math.floor(Math.random() * 256) // 0-255
+
+  c = "rgb(" + red + "," + green + "," + blue +")";
+});
+
+canvas.addEventListener("mousemove", playerPosition);
+window.addEventListener("keydown", move);
+
+    </script>
   </body>
 </html>
