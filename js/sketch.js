@@ -60,6 +60,12 @@ function ball(){
   if(ballX + 10 > canvasWidth){
     ballSpeedX = -ballSpeedX;
   }
+  if (ballX <= paddlePX + paddleWidth + 10 && ballY <= paddlePY + paddleHeight + 10 && ballY >= paddlePY - 10) {
+    ballSpeedX = -ballSpeedX;
+  }
+  if (ballX >= paddlePTX - 10 && ballY <= paddlePTY + paddleHeight + 10 && ballY >= paddlePTY - 10) {
+    ballSpeedX = -ballSpeedX;
+  }
 };
 
 function paddleOne(){
