@@ -113,7 +113,9 @@ function ball() {
   //piłka
   ctx.beginPath();
   ctx.arc(ballX,ballY,ballR,0*Math.PI,2*Math.PI);
-  ctx.fillStyle = c;
+  ctx.strokeStyle = 'white';
+  ctx.stroke();
+  ctx.fillStyle = 'white';
   ctx.fill();
   ballX += ballSpeedX;
   ballY += ballSpeedY;
@@ -121,7 +123,6 @@ function ball() {
   if (ballY - ballR <= 0 || ballY + ballR >= ch) {
     ballSpeedY = -ballSpeedY;
     speedUp();
-    playAudio();
   }
   /*if(ballX<=0 || (ballX+ballR)>=cw){
         ballSpeedX=-ballSpeedX;
@@ -144,25 +145,26 @@ function ball() {
                 console.log("gora")
             }*/
 
-            if (ballX > 50 && ballX - ballR < 90) {
-              if (middleBall >= middlePaddleP - 50 - ballR / 2 &&
-                  middleBall <= middlePaddleP + 50 - ballR / 2){
-                    ballSpeedX = -ballSpeedX;
-                    speedUp();
-                    playAudio();
-                    changeColor();
-              }
-            }
-            if (ballX > 890 && ballX < 930) {
-              if (middleBall >= middlePaddleAI - 50 - ballR / 2 &&
-                middleBall <= middlePaddleAI + 50 + ballR / 2){
-                ballSpeedX = -ballSpeedX;
-                speedUp();
-                playAudio();
-                changeColor();
-              }
-            }
+  if (ballX > 50 && ballX - ballR < 90) {
+    if (middleBall >= middlePaddleP - 50 - ballR / 2 &&
+        middleBall <= middlePaddleP + 50 - ballR / 2){
+          ballSpeedX = -ballSpeedX;
+          speedUp();
+      	  playAudio()
+          changeColor()
+    }
+  }
+  if (ballX > 890 && ballX < 930) {
+    if (middleBall >= middlePaddleAI - 50 - ballR / 2 &&
+      middleBall <= middlePaddleAI + 50 + ballR / 2){
+      ballSpeedX = -ballSpeedX;
+      speedUp();
+      playAudio()
+      changeColor()
+    }
+  }
 }
+
 //zmiana koloru podczas odbicia piłki
 function changeColor(){
   const red = Math.floor(Math.random() * 256) // 0-255
@@ -191,6 +193,7 @@ function game() {
   ball();
   player();
   ai();
+  aiPosition();
 }
 
 setInterval(game, 1000 / 60);
@@ -198,18 +201,21 @@ setInterval(game, 1000 / 60);
 topCanvas = canvas.offsetTop;
 console.log("topCanvas")
 
+topCanvas = canvas.offsetTop;
+console.log("topCanvas")
+
 //pozycja kursora
 //e - informacje o położeniu myszy
 function playerPosition(e) {
-	//console.log("pozycja myszy to" + (e.clientY - topCanvas))
-  aiY = e.clientY - topCanvas - paddleHeight / 2;
+  //console.log("pozycja myszy to" + (e.clientY - topCanvas))
+  playerY = e.clientY - topCanvas - paddleHeight / 2;
 
   //zabezpieczenie przed wyjechaniem paletki poza canvas
-  if (aiY >= ch - paddleHeight) {
-    aiY = ch - paddleHeight;
+  if (playerY >= ch - paddleHeight) {
+    playerY = ch - paddleHeight;
   }
-  if (aiY <= 0) {
-    aiY = 0;
+  if (playerY <= 0) {
+    playerY = 0;
   }
 }
 
@@ -226,6 +232,42 @@ function speedUp() {
     ballSpeedY += .4;
   } else if (ballSpeedY < 0 && ballSpeedY > -16) {
     ballSpeedY -= .4;
+  }
+}
+
+function speedUpPad() {
+  if (ballSpeedX > 0 && ballSpeedX < 16) {
+    ballSpeedX += .4;
+  } else if (ballSpeedX < 0 && ballSpeedX > -16) {
+    ballSpeedX -= .4;
+  }
+}
+
+//sztuczna inteligencja
+function aiPosition() {
+  //pozycja środka paletki
+  const middlePaddle = aiY + paddleHeight / 2;
+  //pozycja środka piłki
+  const middleBall = ballY + ballR / 2;
+
+  //druga połowa boiska
+  if (ballX > 600) {
+    if (middlePaddle - middleBall > 200) {
+      aiY -= 30;
+    } else if (middlePaddle - middleBall > 50) {
+      aiY -= 20;
+    } else if (middlePaddle - middleBall < -200) {
+      aiY += 30;
+    } else if (middlePaddle - middleBall < -50) {
+      aiY += 20;
+    }
+  } else if (ballX <= 600 && ballX > 150) {
+    //pierwsza połowa boiska
+    if (middlePaddle - middleBall > 100) {
+      aiY -= 10;
+    } else if (middlePaddle - middleBall < -100) {
+      aiY += 10;
+    }
   }
 }
 
