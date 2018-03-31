@@ -160,7 +160,7 @@ function score(){
 };
 
 function gameOne(){
-  if(leftscore >= 1){
+  if(leftscore >= 10){
     righscore = 0;
     leftscore = 0;
     ballSpeedX = 0;
@@ -168,11 +168,13 @@ function gameOne(){
     ballSize = 0;
     fill('255');
     textSize(80);
-    text('Koniec gry', canvasWidth / 2 - 250, canvasHeight / 2)
+    text('Koniec gry', canvasWidth / 2 - 180, canvasHeight / 2);
+    textSize(30);
+    text('Aby wznowić grę należy kliknąć klawisz [F5]', canvasWidth / 2 - 285, canvasHeight / 2 + 100);
   }
 };
 function gameTwo(){
-  if(rightscore >= 1){
+  if(rightscore >= 10){
     righscore = 0;
     leftscore = 0;
     ballSpeedX = 0;
@@ -180,6 +182,8 @@ function gameTwo(){
     ballSize = 0;
     fill('');
     textSize(80);
-    text('Koniec gry', canvasWidth / 2 - 180, canvasHeight / 2)
+    text('Koniec gry', canvasWidth / 2 - 180, canvasHeight / 2);
+    textSize(30);
+    text('Aby wznowić grę należy kliknąć klawisz [F5]', canvasWidth / 2 - 285, canvasHeight / 2 + 100);
   }
 };
