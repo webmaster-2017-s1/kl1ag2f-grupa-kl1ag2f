@@ -27,6 +27,9 @@ const lineHeight = 20;
 //prędkoś poruszania się paletek
 var paddleSpeed = 10;
 
+var leftscore = 0;
+var rightscore = 0;
+
 function setup(){
   frameRate(60);
   createCanvas(canvasWidth, canvasHeight);
@@ -38,6 +41,9 @@ function draw(){
   paddleOne();
   paddleTwo();
   move();
+  score();
+  gameOne();
+  gameTwo();
 };
 
 function ball(){
@@ -50,21 +56,40 @@ function ball(){
 
   if(ballY - 15 < 0){
     ballSpeedY = -ballSpeedY;
+    speedUp();
   }
   if(ballY + 15 > canvasHeight){
     ballSpeedY = -ballSpeedY;
+    speedUp();
   }
-  if(ballX - 10 < 0){
-    ballSpeedX = -ballSpeedX;
-  }
-  if(ballX + 10 > canvasWidth){
-    ballSpeedX = -ballSpeedX;
-  }
+  if (ballX <= 0) {
+    ballX = canvasWidth / 2;
+    ballY = canvasHeight / 2;
+
+    rightscore++;
+
+    plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+    ballSpeedX = plusOrMinus * 4;
+    plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+    ballSpeedY = plusOrMinus * Math.round(Math.random() * 3 + 1);}
+  if (ballX >= canvasWidth) {
+    ballX = canvasWidth / 2;
+    ballY = canvasHeight / 2;
+
+    leftscore++;
+
+    plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+    ballSpeedX = plusOrMinus * 4;
+    plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+    ballSpeedY = plusOrMinus * Math.round(Math.random() * 3 + 1);}
+
   if (ballX <= paddlePX + paddleWidth + 10 && ballY <= paddlePY + paddleHeight + 10 && ballY >= paddlePY - 10) {
     ballSpeedX = -ballSpeedX;
+    speedUp();
   }
   if (ballX >= paddlePTX - 10 && ballY <= paddlePTY + paddleHeight + 10 && ballY >= paddlePTY - 10) {
     ballSpeedX = -ballSpeedX;
+    speedUp();
   }
 };
 
@@ -109,5 +134,52 @@ function move(){
   }
   if(keyIsDown(83)){
     paddlePY = paddlePY + paddleSpeed;
+  }
+};
+
+function speedUp() {
+  //prędkość X
+  if (ballSpeedX > 0 && ballSpeedX < 16) {
+    ballSpeedX += .8;
+  } else if (ballSpeedX < 0 && ballSpeedX > -16) {
+    ballSpeedX -= .8;
+  }
+  //prędkośc Y
+  if (ballSpeedY > 0 && ballSpeedY < 16) {
+    ballSpeedY += .8;
+  } else if (ballSpeedY < 0 && ballSpeedY > -16) {
+    ballSpeedY -= .8;
+  }
+};
+function score(){
+  fill(255);
+  textSize(80);
+  stroke('black');
+  text(leftscore, canvasWidth / 2 - 90, 100);
+  text(rightscore, canvasWidth / 2 + 45, 100);
+};
+
+function gameOne(){
+  if(leftscore >= 1){
+    righscore = 0;
+    leftscore = 0;
+    ballSpeedX = 0;
+    ballSpeedY = 0;
+    ballSize = 0;
+    fill('255');
+    textSize(80);
+    text('Koniec gry', canvasWidth / 2 - 250, canvasHeight / 2)
+  }
+};
+function gameTwo(){
+  if(rightscore >= 1){
+    righscore = 0;
+    leftscore = 0;
+    ballSpeedX = 0;
+    ballSpeedY = 0;
+    ballSize = 0;
+    fill('');
+    textSize(80);
+    text('Koniec gry', canvasWidth / 2 - 180, canvasHeight / 2)
   }
 };
