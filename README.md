@@ -1,5 +1,4 @@
-# [Pong]
-Implementacja gry [wpisz nazwę] w JavaScript
+# Pong
 
 ## Uruchomienie
 Aby uruchomić grę należy:
