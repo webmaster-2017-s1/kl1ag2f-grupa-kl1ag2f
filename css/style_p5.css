@@ -5,11 +5,39 @@ body{
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: white;
 }
 canvas{
   background-color: gray;
   border-top: solid 5px;
   border-bottom: solid 5px;
   border-radius: 20px;
+}
+#a1{
+  font-size: 35px;
+  cursor: pointer;
+  background-color: gray;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-left: solid black;
+  style: none;
+  transition: .3s;
+}
+a:hover{
+  padding-right: 10px;
+  color: chocolate;
+
+}
+#options{
+  background-color: cyan;
+  display: none;
+  transition: .5s;
+  border: dashed 5px crimson;
+  border-radius: 10px;
+  padding: 10px;
+}
+button{
+  margin: 2px;
+}
+audio{
+  display: none;
 }

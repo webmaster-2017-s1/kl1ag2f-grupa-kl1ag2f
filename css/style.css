@@ -51,6 +51,10 @@ h2:hover{
   display: none;
   cursor: pointer;
 }
+#back{
+  cursor: pointer;
+  display: none;
+}
 #sound{
   display: none;
 }
