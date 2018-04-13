@@ -17,12 +17,12 @@ var paddlePY = 180;
 var paddlePTX = 930;
 var paddlePTY = 180;
 //wysokość paletki
-paddleHeight = 140;
+var paddleHeight = 140;
 //szerokość paletki
-paddleWidth = 20;
+var paddleWidth = 20;
 //szybkość piłki
-ballSpeedX = -4;
-ballSpeedY = -4;
+var ballSpeedX = -4;
+var ballSpeedY = -4;
 //wielkość linii środkowych
 const lineWidth = 6;
 const lineHeight = 20;
