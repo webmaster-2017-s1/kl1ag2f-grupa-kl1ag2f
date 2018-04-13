@@ -209,11 +209,3 @@ function playAudio(){
 function endAudio(){
   snd2.play();
 };
-
-function change(){
-  paddleSpeed += 1;
-}
-
-var speed1 = document.getElementById('speed1');
-
-speed1.onclick = change();
